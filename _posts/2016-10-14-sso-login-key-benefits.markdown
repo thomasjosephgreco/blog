@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "5 things you can do with Yarn"
-description: Yarn is a new package manager for JavaScript by Facebook. Learn how to use Yarn to increase your productivity.
-date: 2016-10-13 08:30
+title: "SSO Login: Key Benefits"
+description: Learn the benefits of Single Sign On login and how to achieve it with Auth0
+date: 2016-10-14 08:30
 design:
   bg_color: "#1D6A8D"
   image: https://cdn.auth0.com/blog/yarn-logo.png
@@ -12,13 +12,14 @@ author:
   mail: prosper.otemuyiwa@auth0.com
   avatar: https://en.gravatar.com/avatar/1097492785caf9ffeebffeb624202d8f?s=200
 tags:
-- npm
-- yarn
-- javascript
-- package manager
+- sso-login
+- federated-identity
+- single-sign-on
+- credentials
 related:
-- 2016-09-06-use-nginx-plus-and-auth0-to-authenticate-api-clients
-- 2016-06-29-learn-more-about-our-jwt-chrome-debugger-extension
+- 2015-09-23-what-is-and-how-does-single-sign-on-work
+- 2014-08-22-sso-for-legacy-apps-with-auth0-openid-connect-and-apache
+- 2014-07-02-wordpress-single-sign-on
 ---
 
 ---
