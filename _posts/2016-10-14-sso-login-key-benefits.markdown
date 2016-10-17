@@ -24,109 +24,70 @@ related:
 
 ---
 
-**TL;DR:** There are several package managers in the JavaScript land: **npm**, **bower**, **component**, and **volo**, to name a few. As of this writing, the most popular JavaScript package manager is **npm**. The npm client provides access to hundreds of thousands of code libraries in the npm registry. Just recently, Facebook launched a new package manager for JavaScript called **Yarn**, which claims to be faster, more reliable, and more secure than the existing npm client. In this article, you will learn five things you can do with Yarn.
+**TL;DR:** As companies and organizations grow, they have to deal with an increasing number of application and services. More often than not, these applications and services all need some form of authentication to deal with people accessing items and features. Maintaining multiple set of credentials to login to different applications within an organization can be excruciating. **SSO Login** can take away that pain. In this post, I'll show you how **sso login** works and the key benefits of integrating sso login into your application development workflow.
 
 ---
 
-**Yarn** is a new package manager for JavaScript created by Facebook. It offers a fast, highly reliable, and secure dependency management for developers using JavaScript in their apps. Here are five things you can do with Yarn.
+## What is SSO Login?
 
-## 1. Work Offline
+**SSO(Single Sign On) login** refers to when a user logs in to an application with a single set of credentials and is then automatically signed into multiple applications. With sso login, a user gains access to multiple software systems without maintaining different login credentials such as usernames and passwords.
 
-Yarn offers you the ability to work in offline mode. If you have installed a package before, you can install it again without an internet connection. A typical example is shown below:
+A very popular example of sso login is Google's implementation for their software products. Once a user is logged in to Gmail, the user automatically gains access to Youtube, Google Sheets, Google Photos and other products.
 
-When connected to the internet, I installed two packages with Yarn like so:
+![SSO login example - Google apps](https://cdn.auth0.com/blog/sso-google-upload.png)
+_I signed into gmail and already have access to all those products around the red marker_
 
-![Yarn init](https://cdn.auth0.com/blog/blog/yarn-int.png)
-_Create a package.json with yarn init_
+## Key Benefits of SSO Login
 
-![Install express and jsonwebtoken packages with Yarn](https://cdn.auth0.com/blog/blog/yarn-add-packages.png)
-_Install express and jsonwebtoken packages with yarn_
+Why should you implement **SSO login**? What are the benefits of sso login? How does it increase your product's conversion rate? I'll simply highlight some of the benefits of sso login below:
 
-![Installation complete with Yarn](https://cdn.auth0.com/blog/blog/yarn-completed-install.png)
-_Installation complete_
+* Eliminating the time spent re-entering user credentials; thus improving productivity for the user and increasing conversion rate for the product owner. Don’t make your internal employees nor your external users go through the hassle of maintaining and remembering yet another credential.
+* Eliminating password fatigue from having to store or remember different usernames and passwords.
+* Reduced complaints about password problems; thus reducing costs associated with setting up several helpdesk systems having to do with password-reset issues, invalid credentials and so on.
+* SSO login minimizes [phishing](https://en.wikipedia.org/wiki/Phishing); thus improving security.
+* Streamlines the local, desktop and remote application workflow; thus improving users productive capacity.
 
-After the installation was complete, I went ahead and deleted the *node_modules* inside my *orijin* directory and also disconnected from the Internet. I ran Yarn like so:
+## How SSO login works
 
-![Installing packages offline with Yarn](https://cdn.auth0.com/blog/blog/yarn-install-offline.png)
-_Yarn installed the packages offline_
+Let's look at an ideal scenario before going into the nitty-gritty of how sso login works. Three apps have been developed separately namely **App FOO**, **App BAR** and **App BAZ**. They are also hosted on three different domains, **foo.com**, **bar.com** and **baz.com** respectively.
 
-Voilá! All the packages were installed again in less than two seconds. Apparently, Yarn caches every package it downloads so it never needs to do so again. It also maximizes resource utilization by parallelizing operations so that install times are faster than ever.
+**Challenge**: Users have to enter different usernames and passwords for the three different apps to gain access to certain resources.
 
-## 2. Install from Multiple Registries
+**Proposed solution**: Eliminate the different login systems that are present. Users should be able to log in to **foo.com** and then be signed in to  **bar.com** and **baz.com** automatically without having to re-enter authentication credentials.
 
-Yarn offers you the ability to install JavaScript packages from multiple registries, such as [npm](https://www.npmjs.com/), [bower](https://bower.io/), your git repository, and even your local file system.
+**SSO login to the rescue**: With SSO login, a *central authentication server* needs to exist. Let's call our central authentication server **foobaraz.com**. This is how the process flow will look like in this scenario:
 
-By default, it scans the npm registry for your package as follows:
+1. The user accesses **foo.com**.
+2. The user is redirected to **foobaraz.com** where an authentication-related cookie is generated.
+3. The user navigates to **bar.com**.
+4. The user is redirected to **foobaraz.com**
+5. **foobaraz.com** checks whether the user already has an authentication-related cookie, so it redirects the user back to **bar.com** with access to its features and content.
+6. The same process applies to **baz.com**.
 
-```bash
-yarn add <pkg-name>
-```
+The simple take-away concept, worthy of note, is that there is a central domain, through which authentication is performed and then the session is shared with other domains in some secure way e.g a signed JWT(Json Web Token).
 
-Install a package from a remote gzipped tarball file as follows:
+![A typical SSO example](https://cdn.auth0.com/blog/sso/typical-sso.png)
+_A typical graphical SSO example_
 
-```bash
-yarn add <https://thatproject.code/package.tgz>
-```
+## SSO Integrations
 
-Install a package from your local file system as follows:
+There are different integrations for SSO login. SSO integrations are external services that you can use for single sign-on. You can enable SSO login for your corporate applications such as *Salesforce*, *Dropbox*, *Microsoft Azure Active Directory*, *Slack*, *Sharepoint*, *New Relic*, *Zendesk* and so on.
 
-```bash
-yarn add file:/path/to/local/folder
-```
+## Aside: SSO Login with Auth0
 
-This is particularly helpful for developers who constantly publish JavaScript packages. You can use this to test your packages before publishing them to a registry.
+The process flow using Auth0 as the central authentication server can be seen below:
 
-Install a package from a remote git repository like so:
+![Using Auth0 as the central authentication domain](https://cdn.auth0.com/blog/sso/auth0.png)
+_Using Auth0 as the central authentication domain_
 
-```bash
-yarn add <git remote-url>
-```
+With Auth0, SSO login is just a few clicks away. **Auth0** provides out-of-the-box support for more than 15 cloud applications. These applications are: **Microsoft Azure Active Directory**, **Box**, **CloudBees**, **Concur**, **Dropbox**, **Microsoft Dynamics CRM**, **Adobe Echosign**, **Egnyte**, **New Relic**, **Office 365**, **Salesforce**, **Sharepoint**, **Slack**, **Springcm**, **Zendesk**, and **Zoom**.
 
-![Yarn installs from a Github Repo](https://cdn.auth0.com/blog/blog/yarn-add-gitrepo.png)
-_Yarn installs from a Github repo_
+We also support industry standards such as **SAML**, **WS-Fed** and **OAuth 2.0** so you can hook any third-party application that you need.
 
-![Yarn detects that a Github Rep exists as a package in the bower registry](https://cdn.auth0.com/blog/blog/yarn-add-bowercomp.png)
-_Yarn also automatically detects that the git repo exists as a package in the bower registry and treats it as such_
-
-## 3. Fetch Packages Speedily
-
-If you have used **npm** for a while, you must have had experiences where you had to run `npm install`, then go watch a movie, and come back to check whether all the packages you required are finished installing. Well, maybe not that long, but it takes a lot of time to traverse the dependency tree and pull dependencies in. With Yarn, installation time has really been cut down from having to wait several minutes to package installs happening in seconds.
-
-Yarn efficiently queues up requests and avoids request waterfalls to maximize network utilization. It starts by making requests to the registry and recursively looking up each dependency. Next, it looks in a global cache directory to see whether the package has been downloaded before. If it hasn't, Yarn fetches the tarball package and places it in the global cache to enable it to work offline and eliminate the need to re-download.
-
-During install, Yarn parallelizes operations, which makes the install process faster. I did a fresh install of three packages, **jsonwebtoken**, **express** and **lodash**, using **npm** and **yarn**. After *Yarn* was finished installing them, *npm* was still installing.
-
-![Comparison of Yarn and Npm](https://cdn.auth0.com/blog/blog/yarn-npm-compare.png)
-
-## 4. Lock Package Versions Automatically
-
-Npm has a feature called **shrinkwrap**, which is intended to lock down your package dependencies for production use. The challenge with **shrinkwrap** is that every developer has to manually run `npm shrinkwrap` to generate the `npm-shrinkwrap.json` file. Developers are also humans; we can forget!
-
-With Yarn, it's a different ball game. During installation, a `yarn.lock` file is generated automatically. It is similar to the `composer.lock` file that PHP developers are familiar with. The `yarn.lock` file locks down the exact versions of the packages that have been installed and all their dependencies. With this file, you can be certain that every member of your engineering team have the exact package versions installed and deployments can easily be reproduced without unexpected bugs.
-
-## 5. Install Dependencies the Same Way across Machines
-
-The **npm client** installs dependencies in a way that can make the structure of the contents of *Developer A* `node_modules` directory different from *Developer B*. It uses a non-deterministic approach to install these package dependencies. This approach is sometimes responsible for bugs that can't be easily reproduced because of the popular *works on my system* problem.
-
-With Yarn, the presence of a lock file and an install algorithm ensures that the dependencies installed produce the exact same file and folder structure across development machines and when deploying applications to production.
-
-**Note:** One more thing, I know I promised five but I can't help tell you how good **Yarn** makes me feel. Enterprise environments require the ability to be able to list a dependencies' license type. Yarn offers the ability to list the license type for a given dependency by running `yarn licences ls` in your root directory as follows:
-
-![Yarn Licenses](https://cdn.auth0.com/blog/licenses.png)
-
-## Aside: Using Auth0 with Yarn
-
-**Auth0** issues [JSON Web Tokens](https://jwt.io/) on every login for your users. This means that you can have a solid [identity infrastructure](https://auth0.com/docs/identityproviders), including [single sign-on](https://auth0.com/docs/sso/single-sign-on), user management, support for social identity providers (Facebook, Github, Twitter, etc.), enterprise identity providers (Active Directory, LDAP, SAML, etc.) and your own database of users with just a few lines of code.
-
-We can easily set up authentication in our JavaScript apps by using the [Lock Widget](https://auth0.com/lock). You can easily install Auth0 lock widget from your terminal with Yarn like so:
-
-```bash
-yarn add auth0-lock
-```
-
-It installs the widget within seconds and locks down the exact version with the aid of the `yarn.lock` file. If you don't already have an Auth0 account, [sign up](https://auth0.com/signup) for one now. Navigate to the Auth0 [management dashboard](https://manage.auth0.com/), select **Applications** from the navigational menu, then select the app you want to connect with the JavaScript framework of your choice. Now head over to the [Quickstart docs](https://auth0.com/docs/quickstarts), select the type of app you want to build and follow the steps highlighted there.
-
+If you don't already have an Auth0 account, [sign up](https://auth0.com/signup) for one now to enable SSO login for your applications without hassle. Check out the very comprehensive [SSO login docs](https://auth0.com/docs/sso/single-sign-on) on how to implement SSO for your apps. Also you can dive straight in to the [code samples](https://github.com/auth0-samples/auth0-sso-sample) that show how to implement SSO login between Single Page Apps and Regular Web apps using Auth0.
 
 ## Conclusion
 
-Yarn in its infancy has already brought significant improvements in the way JavaScript packages are fetched from global registries into local environments, especially with regard to speed and security. Will it grow to become the most popular choice among JavaScript developers? Have you switched yet? What are your thoughts about Yarn? Let me know in the comments section! 😊
+The benefits of using SSO login to manage a large ecosystem of applications and services are numerous as highlighted in this post. Modern application development crazily supports having distributed and decentralized systems. With an efficient SSO login in place, it's easier to add more applications to the existing suite of services without having to worry about authentication every time. If Google can implement SSO login and succeed, you too can do it and succed with Auth0!
+
+{% include tweet_quote.html quote_text="If Google can implement SSO login and succeed, you too can do it and succeed with Auth0!" %}
