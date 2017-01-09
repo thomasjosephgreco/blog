@@ -1,0 +1,365 @@
+---
+layout: post
+title: "An Intro to Building Mobile Applications with Angular 2 and NativeScript"
+description: "Learn how to building cross-platform native applications using NativeScript and Angular 2"
+date: 2016-12-19 12:00
+category: Angular 2, NativeScript, Native App Development
+author:
+  name: Thomas Greco
+  url: https://twitter.com/sassmasterTG?lang=en
+  mail: thomasjosephgreco@gmail.com
+  avatar: https://secure.gravatar.com/userimage/91705968/0b1ba99d847b441c97e827444bf1105f?size=250
+tags:
+- Angular 
+- NativeScript
+- cross-platform
+tl;dr:
+- This article gives users take a look at the NativeScript runtime and its integration with Angular v2. Throughout this article, readers will learn how to scaffold out a NativeScript application using the NativeScript CLI, and they will also learn how to integrate 3rd level packages into cross-platform applications built with NativeScript.
+- GitHub Repo -> [Auth0-ng2-NativeScript](https://github.com/thomasjosephgreco/auth0-ng2-nativescript)
+---
+
+
+## Angular 2 NativeScript
+Among the most discussed features of Angular 2 is its ability to run in a multitude of environments. In this article, we're going to take a look at how we can use the Angular 2 framework to build a native iOS applications with [NativeScript](telerik.com/nativescript).
+
+![Angular2 NativeScript](https://docs.nativescript.org/img/cli-getting-started/angular/chapter0/NativeScript_Angular_logo.png)
+
+
+### NativeScript 2.x
+#### Introducing NativeScript-Angular
+Angular 2 was built to be completely decoupled from the DOM. With this in mind, the development team behind Angular was able to provide a framework that had the ability to render applications, not just on the web but in a number of different environments. 
+
+
+> The promise of Angular 2 is - One Framework. Mobile and Desktop. With NativeScript we cover the Mobile. NativeScript is the only framework that allows you to write no-compromise native mobile applications with Angular 2. And yes, iOS10 is supported!
+> [Valio Stoycheck](https://github.com/valentinstoychev)
+
+[Progress Software's](https://www.progress.com/) NativeScript division took advantage of this. Over the past year or so, the development teams of both NativeScript ([Progress Software](https://www.progress.com/)) and Angular (Google) have been hard at work, integrating the two technologies, so that we can use them together to create cross-platform mobile applications. When the stable version of Angular 2 was finally released, NativeScript (often referred to as {N})  quickly became the first library to be fully compatible with the framework. For those unfamiliar with NativeScript, it's a runtime that allows native applications to be built with web technologies. Traditionally, NativeScript development entails XML, CSS, and JavaScript, however NativeScript v2 makes it possible to integrate technologies like webpack with the run-time, thus allowing users to utilize tremendous web-like development environments for native applications. 
+
+
+### Benefits of NativeScript
+Before we dive into our code, let's quickly touch on the benefits of using a platform like NativeScript. Unlike apps built with [Cordova](https://cordova.apache.org/), NativeScript does not render web views packaged inside of a native application. Instead of pre-packaging application code into a specific format, NativeScript uses the same codebase to run native applications on regardless of the operating system. When working with NativeScript, users write JavaScript which targets the JavaScript VMs on a device (JavaScriptCore for iOS, V8 for Android).. As a result of this, users have the power to directly interact with 100% of a device’s native APIs and even modify their behavior. To read more about how NativeScript archives this, check out [this blog post](http://developer.telerik.com/featured/nativescript-works/) by TJ Van Toll, a core member of the NativeScript team.
+
+In this tutorial we will be buildings an application that runs on iOS 10, which is the most recent release of Apple's mobile OS. The NativeScript run-time is essentially a bridge between our JavaScript code and native operating systems. It provides web developers, such as myself, with the ability to develop native applications through one shared codebase. Although there are most likely going to be instances in which our code may need tweaking in order to run on one platform or another, it still provides a solid example of how beneficial of a tool NativeScript can be. Instead of hiring full-fledged iOS and Android developers, NativeScript users can build cross-platform applications without any serious performance penalty. If nothing else, this makes NativeScript a great choice for those looking to get up and running with an app quickly! Having said all of this, let's dive into some code. 
+
+![NativeScript Module Diagram](http://2.bp.blogspot.com/-3irQ3dtoHRs/VmZzOR0gcpI/AAAAAAAAS4E/QMnQsdqX2iY/s1600/big-picture.png)
+
+
+### Using the nativescript-cli
+In our example, we're going to use the NativeScript command-line tool to scaffold our our application. To get this tool, we must have [NodeJS and NPM](http://nodejs.org) installed. 
+
+```bash
+#actual command to install tool
+npm install -g nativescript-cli
+#test tool with command
+tns doctor
+```
+
+Once `tns` has been successfully installed, we can use it to build out our application. To ensure that {N} uses Angular 2, we're going to need to run the `tns create` command with the `--ng` flag.
+
+```bash
+tns create myApp --ng
+```
+
+The command about will scaffold out an application called `myApp`. Taking a deeper look into our application,  will see a number of folders. All of the code we will be writing will be held inside the `app` folder. Those familiar with Angular 2 will feel right at home as there is an `app.component.ts` file in addition to a `main.ts` file which holds our main Angular module. Before we continue on, let's quickly launch our application to make sure everything is working properly. To do so, we can run the following commands. 
+
+```bash
+#deploys application via xCode
+tns deploy ios --justlaunch
+```
+
+We should see a "tap" counter that counts down from 16 each time we click the button. It's important to note that this application is being run on xcode's version of iOS 10, further showing the power of NativeScript. That said, NativeScript's ability to access 100% of the APIs on a device with JavaScript means that we do not have to wait for the platform to support newer versions of iOS. 
+
+
+![NativeScript Boilerplat App](https://s12.postimg.org/9g1lahzlp/Screen_Shot_2016_11_02_at_9_12_18_AM.png)
+
+### Adding the NativeScript UI 
+![NativeScript Telerik UI Image](https://lh6.googleusercontent.com/ohMqgQOhc8aGJkjKNdRqcUhPGZ7wgvNjq_MjJ_Hj_gBZMoDsZy2vPc60vdV6xiUv5CTwddzIirR5KTi6a08wwqsYNblERLty8vJSfSmIPXns_oDWm2DM6ifmW6HzpQDmM3eotpF0)
+
+
+Moving forward, let's install the [telerik-nativescript-ui](https://www.npmjs.com/package/nativescript-telerik-ui) library using NPM.
+
+```bash
+npm install nativescript-telerik-ui --save
+```
+
+The `nativescript-telerik-ui` library is a super powerful library provided by Telerik. As we're soon going to see, this library allows us to create stunning user interfaces using different UI components, all of which come equipped with different animations, layouts, gestures and more! Better yet, users receive this functionality right out of the box without having to write any code. We're using the free version of the UI components, which gives us access to the `[RadListView](http://docs.telerik.com/devtools/nativescript-ui/Controls/NativeScript/ListView/overview)` class that we will be using. Those interested should check out the [nativescript-telerik-pro-ui](https://www.npmjs.com/package/nativescript-telerik-ui-pro) which provides even more UI components such as Calendars, Charts, and more! 
+
+![example image of our ListView](https://s12.postimg.org/e465jbm0t/Screen_Shot_2016_11_07_at_2_06_54_PM.png)
+
+Our example is going to utilize `<RadListView>` template tags to establish a list view inside of our application. To best show this, I'm going to be using a version of code found in NativeScript's example code [repository](https://github.com/telerik/nativescript-ui-samples-angular/tree/release/sdkAngular/app). The final code for this tutorial can be found at this [GitHub repository](https://github.com/thomasjosephgreco/auth0-ng2-nativescript)
+
+
+## Getting Started with our code
+### Preparing our top-level module.
+The first thing we need to do is add the `LISTVIEW_DIRECTIVES` constant to our application’s top-level module. This lives in the `main.ts` file. Inside this file, we need to import `LISTVIEW_DIRECTIVES` from the `nativescript-telerik-ui` library and then add it to our `AppComponentModule`’s declarations array. Additionally, we need to add the `ExampleService` class to our modules list of providers. This is the service that we will use to pull our data from; so, before we modify our `main.ts` file, we must create an `example.service.ts` file and place it inside of our `app` folder.`
+
+To learn more about providers in Angular 2, check out [the official docs on dependency injection](https://angular.io/docs/ts/latest/guide/dependency-injection.html).
+
+```typescript
+// app/example.service.ts
+export class ExampleService {
+   items = [
+    { "id": 1, "name": "Item 1", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 2, "name": "Item 2", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 3, "name": "Item 3", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 4, "name": "Item 4", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 5, "name": "Item 5", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 6, "name": "Item 6", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 7, "name": "Item 7", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 8, "name": "Item 8", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 9, "name": "Item 9", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image", "selected": false },
+    { "id": 10, "name": "Item 10", "description":"This is item description.", "title": "This is item Title", "text": "This is item Text",  "image": "This is item Image" , "selected": false},
+   ];
+    getItems () {
+        return this.items;
+    }
+}
+```
+
+Because our tutorial focuses mainly on the powers of combining NativeScript and Angular, we will not discuss the use of providers in depth. All we need to know is that we must add this service (and any other service we may want to use) to our `providers` array or else Angular will be unaware of it.  Once done, our file should replicate the code shown below.
+
+```typescript
+// app/main.ts
+// this import should be first in order to load some required settings (like globals and reflect-metadata)
+import { platformNativeScriptDynamic, NativeScriptModule } from "nativescript-angular/platform";
+import { NgModule } from "@angular/core";
+import { AppComponent } from "./app.component";
+Import { ExampleService } from ‘./example.service’;
+/** Import LISTVIEW_DIRECTIVES from nativescript-telerik-ui/listview/angular */
+import { LISTVIEW_DIRECTIVES } from 'nativescript-telerik-ui/listview/angular';
+
+
+@NgModule({
+    declarations: [
+        LISTVIEW_DIRECTIVES,
+        AppComponent],
+    bootstrap: [AppComponent],
+    imports: [NativeScriptModule],
+    providers: [ExampleService]
+})
+class AppComponentModule {}
+
+platformNativeScriptDynamic().bootstrapModule(AppComponentModule);
+```
+
+#### Note on Angular’s `bootstrap` method
+As I stated earlier, Angular 2 is completely decoupled from the DOM which allows us to render code across different platforms. Whereas an Angular 2 application built for the web will utilize the `[BrowserModule](https://angular.io/docs/ts/latest/api/platform-browser/index/BrowserModule-class.html)` import, our application opts for the `NativeScriptModule`. Continuing on, this application uses NativeScript’s `platformNativeScriptDynamic` method to start (or bootstrap) our application, whereas applications built for the web would use Angular’s `platformBrowserDynamic`. To learn more about NativeScript bootstrapping process, check out [NativeScript docs](https://docs.nativescript.org/core-concepts/angular-bootstrap). 
+
+
+### Configuring The `AppComponent`
+Once our `AppComponentModule` is ready to go, we can continue towards creating our list-view. Below, we can see our `<RadListView>` code snippet that we're working with. It has been simplified to focus on the Angular 2 functionality implemented inside of our app. 
+
+
+```html
+<GridLayout orientation="vertical" rows="auto, *, auto">
+ /** Code is Wrapped in Grid Layout. Blog Post On NativeScript layouts - [Demystifying NativeScript Layouts](http://developer.telerik.com/featured/demystifying-nativescript-layouts/) **/
+     <!-- >> angular-listview-reorder -->
+     /** Pass in dataItems defined in TypeScript to iterate over our arrays. 
+      **  itemReordered="true" => Allows dragging and dropping listItems
+      **  Bind onItemReorded function to itemReordered (event) --> Will emit a value whenever reordered
+      */
+    <RadListView row="2" [items]="dataItems" itemReorder="true" (itemReordered)="onItemReordered($event)">
+       <!--Template code-->
+           </RadListView>
+</GridLayout>
+```
+
+The `<RadListView>` tag is embedded within a GridLayout. To learn more about layouts in NativeScript, refer to [this link](https://docs.nativescript.org/ui/layouts). Now, we're focused on the different attributes inside of our template and the properties they account for. Our example is showing the following properties being set:
+*  `items` :  The `items` property gets or sets the source collection shown within our list-view. In our example, we see square brackets `[]` to bind this value to our `dataItems` array.
+*  `itemReorder`:  This takes a boolean value and sets whether reordering is enabled or not.  
+* `itemReorderedEvent` : The event that occurs after a list item is reordered. Our example uses Angular 2's event bindings `()` to fire off the `onItemReordered()` function when this occurs. 
+
+
+Whereas the `itemReorder` property allows our list-items to be reordered, NativeScript provides attributes like `[itemSwipe](http://docs.telerik.com/devtools/nativescript-ui/api/classes/radlistview.html#itemswipe)`, `pullToRefresh`, and more features that allow us to easily add functionality to our application. By taking a look at the [Telerik UI's docs](http://docs.telerik.com/devtools/nativescript-ui/api/classes/radlistview.html), users can quickly get acquainted with all of these new features. Moving on, let's quickly take a look at our component code for this template and see the logic that our template is tied to. 
+
+```typescript
+import { Component } from "@angular/core";
+import { ObservableArray } from "data/observable-array";
+import { DataItem } from "./dataItem";
+import { ExampleService } from "./example.service";
+import { ListViewEventData } from "nativescript-telerik-ui/listview";
+
+@Component({
+    selector: "my-app",
+    templateUrl: "app.component.html",
+    styles : [`
+        label {
+            height: 50;
+            border-width: 2;
+            border-color: black;
+        },
+        .odd {
+    background-color: red;
+        }
+.even {
+    background-color: blue;
+}
+    `]
+})
+export class AppComponent {
+    public dataItems;
+
+       constructor(private _dataItemService: ExampleService) {
+    }
+
+    get items(): ObservableArray<DataItem> {
+        return this.dataItems;
+    }
+
+    get titles(): ObservableArray<DataItem> {
+        return this._slogans;
+    }
+
+    ngOnInit() {
+        this.dataItems = new ObservableArray(this._dataItemService.getItems());
+    }
+     public onItemReordered(args: ListViewEventData) {
+        console.log("Item reordered. Old index: " + args.itemIndex + " " + "new index: " + args.data.targetIndex);
+    }
+
+    public get message(): string {
+        if (this.counter > 0) {
+            return this.counter + " taps left";
+        } else {
+            return "Hoorraaay! \nYou are ready to start building!";
+        }
+    }
+    
+
+}
+```
+
+
+By taking a look at the component code tied to this example, we see the [`ListViewEventData`](http://do/cs.telerik.com/devtools/nativescript-ui/api/classes/listvieweventdata.html) class being imported from the `telerik-nativescript-ui` library. We can use this to get and set values received via the `ListViewEventData` class. In our example, we see the `ListViewEventData` class being passed into our `onItemReordered` function, and it's also given the value of `args`. From there, we can use the `args.data` property to get the `targetIndex` value. 
+
+```typescript
+  public onItemReordered(args: ListViewEventData) {
+        console.log("Item reordered. Old index: " + args.itemIndex + " " + "new index: " + args.data.targetIndex);
+    }
+```
+
+By taking a further look into our `onItemReordered` function, we see that our values will be logged into our console whenever an item in our list moves. Although it is quite simple, it provides an example of how we can track changes within an application using {N} built-in classes. 
+
+To recap the`itemReorderedEvent` will expose properties about our list-items through  `ListViewEventData`. In order to grab these values, all we need to do is pass in `ListViewEventData` into our  `onItemReordered` function. 
+
+### Defining the list-item templates 
+Now that we've discussed the `<RadListView>` tags, let's finish up by discussing the code within the `<template>` tags.
+
+```html
+ <template tkListItemTemplate let-item="item">
+                <StackLayout orientation="vertical" col="0">
+                    <Label class="nameLabel" [text]="item.name"></Label>
+                </StackLayout>
+    </template>
+```
+
+In this instance, we are defining how each individual list-item is actually going to appear. To be successful in implementing NativeScripts `RadListView`, we need to use the `tkListItemTemplate` directive. Inside this template tag, we see the `let-item` template variable being assigned to the value of `item`. We can then use this template variable to pull values from the `dataItems` array and display our desired content. In addition to `let-item`, NativeScript provides a number of optional `let-` variables that can be extremely helpful during development. For example, we can modify our template to use the `let-even` and `let-odd` attributes like so: 
+
+```html
+        <template tkListItemTemplate let-item="item" let-odd="odd" let-even="even">
+                <StackLayout orientation="vertical" col="0" [class.odd]="odd" [class.even]="even">
+                    <Label class="nameLabel" [text]="item.name"></Label>
+                </StackLayout>
+        </template>
+```
+
+This shows another example of how we can combine Angular concepts with NativeScript to design mobile layouts. Furthermore, we are telling NativeScript to assign the class of `even` to all even numbered list-items and `odd` to all odd numbered list items. As a result of this, we will have a mixed list that contains red and blue backgrounds for each list-item. Lastly, we see the use Angular 2's value bindings `[]` to assign the text of our `<label>` tag to the `name` property of each item in our array. If, for example, I wanted the `id` property, all we must do is swap our `id` for `name`. 
+
+Now, our code for our `AppComponent` and template should look like the following:
+
+```typescript
+//app.component.ts
+import { Component } from "@angular/core";
+import { ObservableArray } from "data/observable-array";
+import { DataItem } from "./dataItem";
+import { ExampleService } from "./example.service";
+import { ListViewEventData } from "nativescript-telerik-ui/listview";
+
+@Component({
+    selector: "my-app",
+    templateUrl: "app.component.html",
+    styles : [`
+        label {
+            height: 50;
+            border-width: 2;
+            border-color: black;
+        },
+        .odd {
+            background-color: red;
+        }
+        .even {
+            background-color: blue;
+        }
+    `]
+})
+export class AppComponent {
+    public counter: number = 16;
+    public dataItems;
+    public _slogans;
+
+       constructor(private _dataItemService: ExampleService) {
+    }
+
+    get items(): ObservableArray<DataItem> {
+        return this.dataItems;
+    }
+
+    get titles(): ObservableArray<DataItem> {
+        return this._slogans;
+    }
+
+    ngOnInit() {
+        this.dataItems = new ObservableArray(this._dataItemService.getItems());
+    }
+     public onItemReordered(args: ListViewEventData) {
+        console.log("Item reordered. Old index: " + args.itemIndex + " " + "new index: " + args.data.targetIndex);
+    }
+
+    public get message(): string {
+        if (this.counter > 0) {
+            return this.counter + " taps left";
+        } else {
+            return "Hoorraaay! \nYou are ready to start building!";
+        }
+    }
+    
+    public onTap() {
+        this.counter--;
+    }
+}
+
+```
+
+```html
+<!-- app.template.html --> 
+<GridLayout>
+    <RadListView row="1" [items]="dataItems" itemReorder="true" (itemReordered)="onItemReordered($event)">
+        <template tkListItemTemplate let-item="item" let-odd="odd" let-even="even">
+                <StackLayout orientation="vertical" col="0" [class.odd]="odd" [class.even]="even">
+                    <Label class="nameLabel" [text]="item.name" >
+                        <input value="username" (input)="username = $event.target.value">         
+                    </Label>
+                </StackLayout>
+        </template>
+    </RadListView>
+</GridLayout>
+```
+
+Granted that your code resembles this, we can launch the application now. Earlier, we saw how we can deploy our app using the `deploy` command. Although this allowed us to get an initial look at our application to make sure everything was running correctly, we're going to want to use a different command during development. Specifically, we want to use the `livesync` command which will keep our application running. By adding the `--watch` flag, we're telling NativeScript to recompile the app whenever changes are made. 
+
+To do this, we should run the command below.
+
+```bash
+tns livesync ios --watch
+```
+
+Further analysis of our application will show smooth scrolling. As a result of our `let-even` and `let-odd` properties, our list will render with both red and blue backgrounds. To demonstrate our draggable list, we can click on a list item and slowly drag it up or down the list. By doing so, we will get a first hand look at the smooth animations I spoke about before. Furthermore, each list item will move in a very fluid manner either up or down depending on where our selected list item is. We also want to analyze our command-line where we are running our app as it should log out the starting and ending index of each of our items. 
+
+## Conclusion
+And thus concludes our tutorial on rendering the RadListView with NativeScript and Angular 2. The example we looked at was basic, but it provided a very solid example of how we can use our pre-existing knowledge of Angular 2 to build completely mobile applications.
+
+#### Auth0 + NativeScript
+Those interested in integrating Auth0’s login capabilities with NativeScript will be happy to know that it is entirely possible. In fact, there is actually a NativeScript module that has been created for this situation in particular. The [nativescript-auth0](https://www.npmjs.com/package/nativescript-auth0) plug-in can be easily implemented within a mobile application via NPM. To get started, check out [this demo](https://github.com/sitefinitysteve/nativescript-auth0/tree/master/demo) created by Steve McNiven-Scott. 
+
+
+
